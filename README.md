@@ -59,3 +59,11 @@ see [SDK Readme](./packages/sdk/README.md)
 ## utils
 
 internal utility methods/test contracts, used by other packages.
+
+## Modifications in this Fork:
+
+This repo was forked at the commit [#ef0751c](https://github.com/uditdc/eth-infinitism-bundler/commit/ef0751cdcf8e865c2550435c3046a6a0b54ef52c)
+
+**Changes**
+
+- Include support for legacy transactions by matching maxFeePerGas, maxPriorityFeePerGas
