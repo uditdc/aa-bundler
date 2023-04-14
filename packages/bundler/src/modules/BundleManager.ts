@@ -1,7 +1,7 @@
 import { EntryPoint } from '@account-abstraction/contracts'
 import { MempoolManager } from './MempoolManager'
 import { ValidateUserOpResult, ValidationManager } from './ValidationManager'
-import { BigNumber, BigNumberish } from 'ethers'
+import { BigNumber, BigNumberish, Overrides } from 'ethers'
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers'
 import Debug from 'debug'
 import { ReputationManager, ReputationStatus } from './ReputationManager'
@@ -78,13 +78,21 @@ export class BundleManager {
   async sendBundle (userOps: UserOperation[], beneficiary: string, storageMap: StorageMap): Promise<SendBundleReturn | undefined> {
     try {
       const feeData = await this.provider.getFeeData()
-      const tx = await this.entryPoint.populateTransaction.handleOps(userOps, beneficiary, {
-        type: 2,
+      const txOverrides: Overrides = {
         nonce: await this.signer.getTransactionCount(),
         gasLimit: 10e6,
-        maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? 0,
-        maxFeePerGas: feeData.maxFeePerGas ?? 0
-      })
+      }
+
+      // Validate if userops transaction is indictive of a legacy transaction or not
+      if (userOps.length > 0 && (userOps[0].maxFeePerGas === userOps[0].maxPriorityFeePerGas)) {
+        txOverrides.gasPrice = feeData.gasPrice ?? 0
+      } else {
+        txOverrides.type = 2
+        txOverrides.maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? 0,
+        txOverrides.maxFeePerGas = feeData.maxFeePerGas ?? 0
+      }
+
+      const tx = await this.entryPoint.populateTransaction.handleOps(userOps, beneficiary, txOverrides)
       tx.chainId = this.provider._network.chainId
       const signedTx = await this.signer.signTransaction(tx)
       let ret: string
