@@ -42,7 +42,7 @@ jobs:
 
       - name: compile bundler.js
         run: |
-          find ./dbuild.sh ../../packages/*/src/ -type f -newer dist/bundler.js 2>&1 | head -2 | grep  . && {
+          cd ./dockers/bundler && find ./dbuild.sh ../../packages/*/src/ -type f -newer dist/bundler.js 2>&1 | head -2 | grep  . && {
             echo webpacking..
             npx webpack
           }
