@@ -30,8 +30,6 @@ export async function resolveConfiguration (programOpts: any): Promise<{ config:
     fileConfig = JSON.parse(fs.readFileSync(configFileName, 'ascii'))
   }
   const config = mergeConfigs(bundlerConfigDefault, fileConfig, commandLineParams)
-  console.log('Merged configuration:', JSON.stringify(config))
-
   const provider: BaseProvider = config.network === 'hardhat'
     // eslint-disable-next-line
     ? require('hardhat').ethers.provider
