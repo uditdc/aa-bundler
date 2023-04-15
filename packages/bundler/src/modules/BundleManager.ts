@@ -80,7 +80,7 @@ export class BundleManager {
       const feeData = await this.provider.getFeeData()
       const txOverrides: Overrides = {
         nonce: await this.signer.getTransactionCount(),
-        gasLimit: 10e6,
+        gasLimit: 10e6
       }
 
       // Validate if userops transaction is indictive of a legacy transaction or not
@@ -88,7 +88,7 @@ export class BundleManager {
         txOverrides.gasPrice = feeData.gasPrice ?? 0
       } else {
         txOverrides.type = 2
-        txOverrides.maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? 0,
+        txOverrides.maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? 0
         txOverrides.maxFeePerGas = feeData.maxFeePerGas ?? 0
       }
 

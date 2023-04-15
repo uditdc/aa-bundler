@@ -75,8 +75,6 @@ export async function runBundler (argv: string[], overrideExit = true): Promise<
   const programOpts = program.parse(argv).opts()
   showStackTraces = programOpts.showStackTraces
 
-  console.log('command-line arguments: ', program.opts())
-
   if (programOpts.createMnemonic != null) {
     const mnemonicFile: string = programOpts.createMnemonic
     console.log('Creating mnemonic in file', mnemonicFile)
