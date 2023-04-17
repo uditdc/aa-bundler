@@ -311,7 +311,8 @@ export abstract class BaseAccountAPI {
   async getUserOpReceipt (userOpHash: string, timeout = 30000, interval = 5000): Promise<string | null> {
     const endtime = Date.now() + timeout
     while (Date.now() < endtime) {
-      const events = await this.entryPointView.queryFilter(this.entryPointView.filters.UserOperationEvent(userOpHash))
+      const lastBlock = Math.max(1, await this.provider.getBlockNumber() - 1000)
+      const events = await this.entryPointView.queryFilter(this.entryPointView.filters.UserOperationEvent(userOpHash), lastBlock)
       if (events.length > 0) {
         return events[0].transactionHash
       }
